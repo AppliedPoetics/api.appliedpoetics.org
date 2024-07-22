@@ -1,7 +1,7 @@
 module Oulipean
 
   def abecedarian(text)
-    puts text
+    text
   end
 
 end
