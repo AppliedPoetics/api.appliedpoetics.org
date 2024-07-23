@@ -39,7 +39,6 @@ post '/:category?/:operation?' do
   operation = params[:operation]
   data = JSON.parse request.body.read
   uuid = write_resource(data["content"])
-  puts uuid
   begin
     response = :category.public_send(operation, read_resource(uuid))
     status 200
@@ -53,6 +52,6 @@ post '/:category?/:operation?' do
       res: "Bad method"
     })
   ensure
-    #delete_resource(uuid)
+    delete_resource(uuid)
   end
 end
