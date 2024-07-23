@@ -10,8 +10,8 @@ require_all 'methods'
 include_all
 
 def write_resource(content)
-  FileUtils.makedir_p 'resources'
-  name = securerandom.hex
+  FileUtils.mkdir_p 'resources'
+  name = SecureRandom.uuid
   begin
     File.open("resources/#{name}", "w") {
       |file| file.write(content)
@@ -22,18 +22,13 @@ def write_resource(content)
   true
 end
 
-def acquire_content(data)
-  data.body.rewind
-  body = JSON.parse data.read
-  puts body
-end
-
 # Process calls to valid endpoints; fence out
 # all of the bad requests
 post '/:category?/:operation?' do
   category = params[:category]
   operation = params[:operation]
-  puts JSON.parse request.body.read
+  data = JSON.parse request.body.read
+  write_resource(data["content"])
   begin
     response = :category.public_send(operation, "HI")
     status 200
