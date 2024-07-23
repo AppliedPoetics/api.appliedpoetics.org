@@ -1,5 +1,4 @@
-# Gemfile libraries
-require 'sinatra'
+# Gemfile librariesrequire 'sinatra'
 require 'fileutils'
 require 'securerandom'
 require 'require_all'
@@ -24,7 +23,7 @@ end
 
 def read_resource(uuid)
   name = "resources/#{uuid}"
-  File.read(name) if File.exist?(name)
+  File.read(name).exists?(name)
 end
 
 def delete_resource(uuid)
