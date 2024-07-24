@@ -1,8 +1,7 @@
 module Oulipean
 
-  def abecedarian(text)
-    text
+  def abecedarian(content)
+    content
   end
 
 end
-
