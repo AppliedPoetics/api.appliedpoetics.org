@@ -1,3 +1,3 @@
 Rails.application.routes.draw do
-    resources "/:cat/:mtd", to: "application#index"
+    resources "/:cat/:mtd", to: "application#create", only: [:create]
 end

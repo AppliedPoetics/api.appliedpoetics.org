@@ -1,6 +1,7 @@
 class ApplicationController < ActionController::API
-    def index
-        @cat = params[:cat]
-        @mtd = params[:mtd]
+    def create
+        @cat, @mtd = params[:cat], params[:mtd]
+        task = Constraint.create(@cat, @mtd)
+        render json: task, status: :ok
     end
 end
