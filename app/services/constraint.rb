@@ -1,6 +1,7 @@
 class Constraint
     def self.create(cat, mtd)
-        # Placeholder for actual constraint creation logic
-        { category: cat, method: mtd, status: "created" }
+        # { category: cat, method: mtd, status: "created" }
+        cls = Object.const_get(cat.capitalize)
+        cls.create(mtd)
     end
 end

@@ -1,3 +1,9 @@
 Rails.application.routes.draw do
-    resources "/:cat/:mtd", to: "application#create", only: [:create]
+    namespace :v1 do
+        scope '/:cat' do
+            scope '/:mtd' do
+                post '/', to: 'application#create'
+            end
+        end
+    end
 end
