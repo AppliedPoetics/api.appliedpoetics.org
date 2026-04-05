@@ -3,7 +3,7 @@ module V1
         # POST v1/:cat/:mtd
         def create
             @cat, @mtd = params[:cat], params[:mtd]
-            output = Constraint.create(@cat, @mtd)
+            output = Constraint.create(@cat, @mtd, request.POST)
             render json: output, status: :ok
         end
     end
