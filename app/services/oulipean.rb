@@ -61,3 +61,39 @@ class Fibonacci < Oulipean
     end
 
 end
+
+class Prisoner < Oulipean
+
+    def self.create(params)
+        # List of exiled characters
+        letters = "bdfghjklpqty0123456789".chars
+        self.exclude_words(params[:text], letters)
+    end
+
+end
+
+class BelleAbsente < Oulipean
+
+    def self.create(params)
+        letters = params.fetch(:letters).chars
+        self.exclude_words(params[:text], letters)
+    end
+
+end
+
+class BeauPresente < Oulipean
+
+    def self.create(params)
+        letters = params.fetch(:letters).chars
+        self.include_words(params[:text], letters)
+    end
+
+end
+
+class Univocalism < Oulipean
+
+    def self.create(params)
+        # TODO: Setup the regex to discover surrounded vowels
+    end
+
+end
