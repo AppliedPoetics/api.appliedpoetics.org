@@ -38,3 +38,26 @@ class Tautogram < Oulipean
     end 
 
 end
+
+class Homoconsonantism < Oulipean
+    
+    def self.create(params)
+        letters = "aeiou".chars
+        self.exclude_words(params[:text], letters)
+    end
+
+end
+
+class Fibonacci < Oulipean
+    
+    def self.create(params)
+        words = params[:text].split
+        fibs = [1, 1]
+        while fibs.last <= words.length
+            fibs << fibs[-1] + fibs[-2]
+        end
+        result = fibs.select { |n| n <= words.length }.map { |n| words[n - 1] }
+        {"result": result.join(" ")}
+    end
+
+end
