@@ -8,7 +8,7 @@ module V1
             output = Constraint.create(@cat, @mtd, request.POST)
             render json: output, status: :ok
         end
-        
+
         rescue_from ActionController::ParameterMissing do |exception|
             render json: { error: exception.message }, status: :bad_request
         end
