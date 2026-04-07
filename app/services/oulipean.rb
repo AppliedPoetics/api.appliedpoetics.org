@@ -1,5 +1,7 @@
 class Oulipean < ActionController::Parameters
-    
+
+    @@vowels = "aeiou"
+
     def self.create(mtd, params)
         cls = Object.const_get(mtd.capitalize)
         cls.create(params)
@@ -15,6 +17,10 @@ class Oulipean < ActionController::Parameters
         regex = Regexp.union(letters)
         result = text.split.select { |w| w.downcase.match?(regex) }
         {"result": result.join(" ")}
+    end
+
+    def self.vowels
+        @@vowels
     end
 
 end
@@ -41,8 +47,12 @@ end
 
 class Homoconsonantism < Oulipean
     
+    def initialize
+        super
+    end
+
     def self.create(params)
-        letters = "aeiou".chars
+        letters = Oulipean.vowels.chars
         self.exclude_words(params[:text], letters)
     end
 
@@ -92,8 +102,14 @@ end
 
 class Univocalism < Oulipean
 
-    def self.create(params)
-        # TODO: Setup the regex to discover surrounded vowels
+    def initialize
+        super
     end
+
+    def self.create(params)
+        letter = params.fetch(:letters).chars.first
+        letters = Oulipean.vowels.chars.reject { |l| l != letter }
+        params[:text].gsub(/\w*#{letters}\w*/i," ")
+    end 
 
 end
