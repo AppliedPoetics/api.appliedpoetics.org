@@ -113,3 +113,16 @@ class Univocalism < Oulipean
     end 
 
 end
+
+class Snowball < Oulipean
+
+    def self.create(params)
+        order = params.fetch(:order)
+        if order == "asc"
+            params[:text].split.sort_by(&:length).join(" ")
+        elsif order == "desc"
+            params[:text].split.sort_by(&:length).reverse.join(" ")
+        end
+    end
+        
+end
