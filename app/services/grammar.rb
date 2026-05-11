@@ -43,7 +43,7 @@ class PartsOfSpeech < Grammar
         unless VALID_TAGS.include?(part_of_speech)
             raise ArgumentError, "Invalid part of speech: #{part_of_speech}. Valid tags: #{VALID_TAGS.join(', ')}"
         end
-        require 'engtagger'
+        require "engtagger"
         tgr = EngTagger.new
         tagged = tgr.add_tags(params[:text])
         tgr.public_send("get_#{part_of_speech}", tagged).keys.join(" ")
