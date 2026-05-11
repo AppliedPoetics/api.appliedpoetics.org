@@ -55,7 +55,7 @@ class Abcquence < Syntax
     def self.create(params)
         words = params[:text].split
         result = words.select do |w|
-            letters = w.gsub(/[^a-zA-Z]/, '').downcase.chars
+            letters = w.gsub(/[^a-zA-Z]/, "").downcase.chars
             letters == letters.sort
         end
         result.join(" ")
@@ -136,6 +136,54 @@ class Anagram < Syntax
             return replacement.capitalize
         end
         replacement
+    end
+end
+
+class Alternator < Syntax
+    def self.create(params)
+        words = params[:text].split
+        vowels = "aeiou"
+        result = words.select do |w|
+            letters = w.gsub(/[^a-zA-Z]/, "").downcase.chars
+            next false if letters.length < 2
+            pattern = letters.map { |c| vowels.include?(c) ? :v : :c }
+            pattern.each_cons(2).all? { |a, b| a != b }
+        end
+        result.join(" ")
+    end
+end
+
+class Hexwords < Syntax
+    HEX_MAP = {
+        "a" => "4", "b" => "8", "c" => "c", "d" => "d",
+        "e" => "3", "f" => "f", "g" => "6", "i" => "1",
+        "l" => "1", "o" => "0", "s" => "5", "t" => "7",
+        "z" => "2"
+    }.freeze
+
+    def self.create(params)
+        words = params[:text].split
+        result = words.filter_map do |w|
+            cleaned = w.gsub(/[^a-zA-Z0-9]/, "")
+            next if cleaned.empty?
+
+            if cleaned.match?(/\A[a-fA-F0-9]+\z/)
+                cleaned.downcase
+            else
+                mapped = cleaned.downcase.chars.map do |c|
+                    if c.match?(/\d/)
+                        c
+                    else
+                        HEX_MAP[c]
+                    end
+                end
+
+                next if mapped.include?(nil)
+                mapped.join
+            end
+        end
+
+        result.join(" ")
     end
 end
 
