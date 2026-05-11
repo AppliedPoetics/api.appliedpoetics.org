@@ -186,4 +186,3 @@ class Hexwords < Syntax
         result.join(" ")
     end
 end
-
