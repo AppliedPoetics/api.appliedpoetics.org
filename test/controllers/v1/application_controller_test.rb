@@ -113,5 +113,32 @@ module V1
       body = JSON.parse(response.body)
       assert_equal "two four five two three", body["result"]
     end
+
+    test "should process pop weatherizer" do
+      post v1_path(cat: "pop", mtd: "weatherizer"), params: {
+        text: "The sun is shining. I walked to the store. A storm is coming."
+      }
+      assert_response :ok
+      body = JSON.parse(response.body)
+      assert_equal "The sun is shining. A storm is coming.", body["result"]
+    end
+
+    test "should process pop colorizer" do
+      post v1_path(cat: "pop", mtd: "colorizer"), params: {
+        text: "The sky was blue. I walked to the store. The leaves turned crimson."
+      }
+      assert_response :ok
+      body = JSON.parse(response.body)
+      assert_equal "The sky was blue. The leaves turned crimson.", body["result"]
+    end
+
+    test "should process pop sartorializer" do
+      post v1_path(cat: "pop", mtd: "sartorializer"), params: {
+        text: "She wore a beautiful silk dress. The weather was nice. He had on leather boots."
+      }
+      assert_response :ok
+      body = JSON.parse(response.body)
+      assert_equal "She wore a beautiful silk dress. He had on leather boots.", body["result"]
+    end
   end
 end
