@@ -56,12 +56,12 @@ module V1
             arguments = params["arguments"] || {}
             result = McpToolRegistry.call(tool_name, arguments)
             success_response(id, {
-                content: [{ type: "text", text: result[:result].to_s }],
+                content: [ { type: "text", text: result[:result].to_s } ],
                 isError: false
             })
         rescue KeyError, ArgumentError => e
             success_response(id, {
-                content: [{ type: "text", text: e.message }],
+                content: [ { type: "text", text: e.message } ],
                 isError: true
             })
         end
@@ -77,11 +77,11 @@ module V1
                 return error_response(id, -32602, "Resource not found: #{uri}")
             end
             success_response(id, {
-                contents: [{
+                contents: [ {
                     uri: uri,
                     mimeType: "text/plain",
                     text: content
-                }]
+                } ]
             })
         end
 

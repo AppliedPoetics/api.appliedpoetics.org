@@ -127,7 +127,7 @@ class ColorField < Algorithmic
         step = if total_pixels <= 1000
             1
         else
-            [1, Math.sqrt(total_pixels / 1000.0).ceil].max
+            [ 1, Math.sqrt(total_pixels / 1000.0).ceil ].max
         end
 
         unique_pixels = Set.new

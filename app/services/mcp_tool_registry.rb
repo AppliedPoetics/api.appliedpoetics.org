@@ -39,7 +39,7 @@ class McpToolRegistry
         },
         "oulipean_snowball" => {
             text: { type: "string" },
-            order: { type: "string", enum: ["asc", "desc"], description: "Sort order by word length" }
+            order: { type: "string", enum: [ "asc", "desc" ], description: "Sort order by word length" }
         },
         "numerology_nth" => {
             text: { type: "string" },
@@ -64,7 +64,7 @@ class McpToolRegistry
         "algorithmic_color_field" => {
             text: { type: "string" },
             image: { type: "string", description: "Image data or file path" },
-            mode: { type: "string", enum: ["sentences", "letters", "anagrams", "list"], description: "Processing mode" }
+            mode: { type: "string", enum: [ "sentences", "letters", "anagrams", "list" ], description: "Processing mode" }
         }
     }.freeze
 
