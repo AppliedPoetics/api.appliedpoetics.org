@@ -145,24 +145,24 @@ class FormicTest < ActiveSupport::TestCase
   test "Pattern extract returns words by default" do
     engine = Formic.const_get(:PatternEngine)
     words = engine.send(:extract, "one two three")
-    assert_equal ["one", "two", "three"], words
+    assert_equal [ "one", "two", "three" ], words
   end
 
   test "Pattern extract returns lines when mode is lines" do
     engine = Formic.const_get(:PatternEngine)
     lines = engine.send(:extract, "a\nb\nc", mode: :lines)
-    assert_equal ["a", "b", "c"], lines
+    assert_equal [ "a", "b", "c" ], lines
   end
 
   test "Pattern extract returns end words when mode is end_words" do
     engine = Formic.const_get(:PatternEngine)
     words = engine.send(:extract, "a b\nc d\ne f\ng h\ni j\nk l", mode: :end_words)
-    assert_equal ["b", "d", "f", "h", "j", "l"], words
+    assert_equal [ "b", "d", "f", "h", "j", "l" ], words
   end
 
   test "Pattern extract falls back to first words when fewer than six lines" do
     engine = Formic.const_get(:PatternEngine)
     words = engine.send(:extract, "one two three four five six", mode: :end_words)
-    assert_equal ["one", "two", "three", "four", "five", "six"], words
+    assert_equal [ "one", "two", "three", "four", "five", "six" ], words
   end
 end

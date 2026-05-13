@@ -82,7 +82,7 @@ class OulipeanTest < ActiveSupport::TestCase
       letters: "abc"
     })
     words = result[:result].split
-    assert_equal ["a", "a", "A", "a", "a", "a", "a", "a"], words
+    assert_equal [ "a", "a", "A", "a", "a", "a", "a", "a" ], words
   end
 
   test "Univocalism removes words containing unwanted vowels" do

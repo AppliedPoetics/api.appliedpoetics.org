@@ -46,8 +46,8 @@ module V1
                     description: "appliedpoetics.org Oulipean poetry API",
                     websiteUrl: "https://api.appliedpoetics.org/v1/mcp",
                     version: "1.0.0",
-                    icons:[ 
-                        {src: "https://www.appliedpoetics.org/img/favicon.ico", mimeType: "image/png", sizes: ["800x800"]}
+                    icons: [
+                        { src: "https://www.appliedpoetics.org/img/favicon.ico", mimeType: "image/png", sizes: [ "800x800" ] }
                     ]
                 }
             })
