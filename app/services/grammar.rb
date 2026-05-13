@@ -18,7 +18,6 @@ class Isolator < Grammar
         desired_punct =params.fetch(:punctuation)
         all_punct = "?<=!?.;"
         # raise KeyError unless desired_punct.length == 1
-        print params[:text].split(/[#{all_punct}]/)
         params[:text].split(/[#{all_punct}]/).select { |s| s.last == desired_punct }.join(" ")
     end
 end
