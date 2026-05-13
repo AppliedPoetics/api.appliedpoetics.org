@@ -98,7 +98,8 @@ class McpToolRegistry
                         type: "object",
                         properties: schema,
                         required: schema.keys
-                    }
+                    },
+                    annotations: tool_annotations(tool_name)
                 }
             end
         end
@@ -131,6 +132,24 @@ class McpToolRegistry
 
     def self.snake_to_camel(str)
         str.split("_").map(&:capitalize).join
+    end
+
+    def self.tool_annotations(tool_name)
+        if tool_name == "pop_powerball"
+            {
+                readOnlyHint: true,
+                destructiveHint: false,
+                idempotentHint: false,
+                openWorldHint: true
+            }
+        else
+            {
+                readOnlyHint: true,
+                destructiveHint: false,
+                idempotentHint: true,
+                openWorldHint: false
+            }
+        end
     end
 
     def self.tool_description(tool_name, class_name)
