@@ -1,0 +1,36 @@
+runtime: custom
+env: flex
+
+# Forward HTTPS traffic (port 443) to the container's port 3000
+network:
+  forwarded_ports:
+    - 443:3000
+
+# Health check configuration
+health_check:
+  enable_health_check: true
+  check_interval_sec: 30
+  timeout_sec: 4
+  unhealthy_threshold: 2
+  healthy_threshold: 2
+
+# Resource allocation
+resources:
+  cpu: 1
+  memory_gb: 1
+  disk_size_gb: 10
+
+# Automatic scaling
+automatic_scaling:
+  min_num_instances: 1
+  max_num_instances: 3
+  cool_down_period_sec: 60
+  cpu_utilization:
+    target_utilization: 0.6
+
+# Environment variables
+env_variables:
+  RAILS_ENV: production
+  RAILS_LOG_TO_STDOUT: "1"
+  RAILS_SERVE_STATIC_FILES: "1"
+  PORT: "3000"

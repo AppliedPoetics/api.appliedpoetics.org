@@ -54,7 +54,7 @@ bin/rails db:create db:migrate
 bin/rails server
 ```
 
-The application runs on port 3000 by default.
+The application runs on port 3000 internally and is exposed on port 443 via `app.yaml`.
 
 ---
 
