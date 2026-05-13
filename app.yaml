@@ -1,6 +1,10 @@
 runtime: custom
 env: flex
 
+services:
+  - name: api
+    http_port: 3000
+    
 # Forward HTTPS traffic (port 443) to the container's port 3000
 network:
   forwarded_ports:
