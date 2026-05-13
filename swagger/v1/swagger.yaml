@@ -161,7 +161,7 @@ paths:
                   oneOf:
                     - type: string
                     - type: integer
-                    - type: 'null'
+                  nullable: true
                 method:
                   type: string
                   enum:
@@ -227,7 +227,7 @@ paths:
                     oneOf:
                       - type: string
                       - type: integer
-                      - type: 'null'
+                    nullable: true
                   result:
                     type: object
                     description: Result payload (present on success)
@@ -254,7 +254,7 @@ paths:
                           subscribe: false
                           listChanged: false
                       serverInfo:
-                        name: applied-poetics-api
+                        name: applied-poetics-mcp
                         version: 1.0.0
                         icon: https://www.appliedpoetics.org/img/favicon.ico
                 ToolsListSuccess:
@@ -330,7 +330,8 @@ paths:
                   jsonrpc:
                     type: string
                   id:
-                    type: 'null'
+                    type: string
+                    nullable: true
                   error:
                     type: object
                     properties:
