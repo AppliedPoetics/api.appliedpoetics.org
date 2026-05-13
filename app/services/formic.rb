@@ -56,7 +56,7 @@ class Sestina < Formic
 
     stanzas = PatternEngine.arrange(words, STANZA_PATTERN)
     envoi = PatternEngine.arrange(words, ENVOI_PATTERN, item_joiner: " ", section_joiner: "\n")
-    "#{stanzas}\n\n#{envoi}"
+    { result: "#{stanzas}\n\n#{envoi}" }
   end
 end
 
@@ -71,7 +71,7 @@ class Triolet < Formic
       raise ArgumentError, "Triolet requires at least 5 lines (found #{lines.length})"
     end
 
-    PatternEngine.arrange(lines.first(5), LINE_PATTERN)
+    { result: PatternEngine.arrange(lines.first(5), LINE_PATTERN) }
   end
 end
 
@@ -87,7 +87,7 @@ class Pantoum < Formic
 
     num_stanzas = lines.length / 2
     pattern = build_pattern(num_stanzas)
-    PatternEngine.arrange(lines, pattern)
+    { result: PatternEngine.arrange(lines, pattern) }
   end
 
   def self.build_pattern(n)

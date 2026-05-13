@@ -1,83 +1,119 @@
 require "test_helper"
 
 class OulipeanTest < ActiveSupport::TestCase
+  setup do
+    @text = File.read(Rails.root.join("data", "test.txt"))
+  end
+
   test "Lipogram excludes words containing given letters" do
     result = Lipogram.create({
-      text: "the quick brown fox",
+      text: @text,
       letters: "e"
     })
-    assert_equal "quick brown fox", result[:result]
+    words = result[:result].split
+    assert_not_includes words, "Gerald"   # contains 'e'
+    assert_includes words, "duck"          # no 'e'
+    assert_includes words, "was"           # no 'e'
+    assert_includes words, "brown"         # no 'e'
   end
 
   test "Tautogram includes only words containing given letters" do
     result = Tautogram.create({
-      text: "the quick brown fox",
+      text: @text,
       letters: "e"
     })
-    assert_equal "the", result[:result]
+    words = result[:result].split
+    assert_includes words, "Gerald"        # contains 'e'
+    assert_includes words, "reflections."  # contains 'e'
+    assert_not_includes words, "duck"      # no 'e'
+    assert_not_includes words, "was"       # no 'e'
   end
 
   test "Homoconsonantism excludes words with vowels" do
     result = Homoconsonantism.create({
-      text: "my gym rhythm"
+      text: @text
     })
-    assert_equal "my gym rhythm", result[:result]
+    words = result[:result].split
+    assert_includes words, "by"
+    assert_includes words, "sky"
+    assert_not_includes words, "Gerald"
+    assert_not_includes words, "duck"
   end
 
   test "Fibonacci selects words at fibonacci positions" do
     result = Fibonacci.create({
-      text: "one two three four five six seven eight nine ten"
+      text: @text
     })
-    assert_equal "one one two three five eight", result[:result]
+    words = result[:result].split
+    assert_equal "Gerald", words[0]
+    assert_equal "Gerald", words[1]
+    assert_equal "was", words[2]
+    assert_equal "a", words[3]
+    assert_equal "kind", words[4]
   end
 
   test "Prisoner excludes words with exiled characters" do
     result = Prisoner.create({
-      text: "a cute maze of weird kiwi liquor"
+      text: @text
     })
-    assert_equal "a maze", result[:result]
+    words = result[:result].split
+    assert_includes words, "was"           # no exiled chars
+    assert_includes words, "an"            # no exiled chars
+    assert_not_includes words, "duck"      # contains 'k'
+    assert_not_includes words, "quick"     # contains 'k'
   end
 
   test "BelleAbsente excludes words containing any of the given letters" do
     result = BelleAbsente.create({
-      text: "my gym psst the quick brown crwth tv shh hmm brr",
+      text: @text,
       letters: "aeiou"
     })
-    assert_equal "my gym psst crwth tv shh hmm brr", result[:result]
+    words = result[:result].split
+    assert_includes words, "by"
+    assert_includes words, "sky"
+    assert_not_includes words, "Gerald"
+    assert_not_includes words, "duck"
+    assert_not_includes words, "was"
   end
 
   test "BeauPresente includes only words composed exclusively of given letters" do
     result = BeauPresente.create({
-      text: "a ab abc abcd",
+      text: @text,
       letters: "abc"
     })
-    assert_equal "a ab abc", result[:result]
+    words = result[:result].split
+    assert_equal ["a", "a", "A", "a", "a", "a", "a", "a"], words
   end
 
   test "Univocalism removes words containing unwanted vowels" do
     result = Univocalism.create({
-      text: "banana apple cherry",
+      text: @text,
       letters: "a"
     })
-    # Keeps only words without vowels other than 'a' (implementation removes words containing 'a')
-    assert_includes result[:result], "cherry"
-    assert_not_includes result[:result].split, "banana"
-    assert_not_includes result[:result].split, "apple"
+    words = result[:result].split
+    assert_not_includes words, "Gerald"    # contains 'a'
+    assert_not_includes words, "was"       # contains 'a'
+    assert_includes words, "the"           # no 'a'
+    assert_includes words, "in"            # no 'a'
   end
 
   test "Snowball sorts words ascending by length" do
     result = Snowball.create({
-      text: "a big elephant ran fast",
+      text: @text,
       order: "asc"
     })
-    assert_equal "a big ran fast elephant", result[:result]
+    words = result[:result].split
+    assert_equal "a", words[0]
+    assert_equal "mirror-perfect,", words[-1]
   end
 
   test "Snowball sorts words descending by length" do
     result = Snowball.create({
-      text: "a big elephant ran fast",
+      text: @text,
       order: "desc"
     })
-    assert_equal "elephant fast ran big a", result[:result]
+    words = result[:result].split
+    assert_equal "mirror-perfect,", words[0]
+    assert_equal "a", words[-1]
   end
 end

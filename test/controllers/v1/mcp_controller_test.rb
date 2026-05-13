@@ -14,7 +14,7 @@ module V1
       body = JSON.parse(response.body)
       assert_equal "2.0", body["jsonrpc"]
       assert_equal 1, body["id"]
-      assert_equal "applied-poetics-api", body["result"]["serverInfo"]["name"]
+      assert_equal "applied-poetics-mcp", body["result"]["serverInfo"]["name"]
       assert_equal "2024-11-05", body["result"]["protocolVersion"]
     end
 
