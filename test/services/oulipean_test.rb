@@ -97,23 +97,25 @@ class OulipeanTest < ActiveSupport::TestCase
     assert_includes words, "in"            # no 'a'
   end
 
-  test "Snowball sorts words ascending by length" do
+  test "Snowball sorts words ascending by length with punctuation removed and character count suffix" do
     result = Snowball.create({
       text: @text,
       order: "asc"
     })
-    words = result[:result].split
-    assert_equal "a", words[0]
-    assert_equal "mirror-perfect,", words[-1]
+    lines = result[:result].split("\n")
+    assert_equal "a [1]", lines[0]
+    assert lines[-1].start_with?("mirrorperfect")
+    assert lines[-1].end_with?("[13]")
   end
 
-  test "Snowball sorts words descending by length" do
+  test "Snowball sorts words descending by length with punctuation removed and character count suffix" do
     result = Snowball.create({
       text: @text,
       order: "desc"
     })
-    words = result[:result].split
-    assert_equal "mirror-perfect,", words[0]
-    assert_equal "a", words[-1]
+    lines = result[:result].split("\n")
+    assert lines[0].start_with?("mirrorperfect")
+    assert lines[0].end_with?("[13]")
+    assert_equal "a [1]", lines[-1]
   end
 end

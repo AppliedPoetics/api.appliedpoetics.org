@@ -102,11 +102,11 @@ end
 class Snowball < Oulipean
     def self.create(params)
         order = params.fetch(:order)
-        if order == "asc"
-            result = params[:text].split.sort_by(&:length).join(" ")
-        elsif order == "desc"
-            result = params[:text].split.sort_by(&:length).reverse.join(" ")
-        end
+        words = params[:text].split
+        cleaned = words.map { |w| w.gsub(/[^a-zA-Z0-9]/, "") }.reject(&:empty?)
+        sorted = cleaned.sort_by(&:length)
+        sorted = sorted.reverse if order == "desc"
+        result = sorted.map { |w| "#{w} [#{w.length}]" }.join("\n")
         { result: result }
     end
 end
