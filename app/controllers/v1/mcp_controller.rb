@@ -42,7 +42,8 @@ module V1
                 },
                 serverInfo: {
                     name: "applied-poetics-api",
-                    version: "1.0.0"
+                    version: "1.0.0",
+                    icon: "https://www.appliedpoetics.org/img/favicon.ico"
                 }
             })
         end
