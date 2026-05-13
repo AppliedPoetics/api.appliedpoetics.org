@@ -2,8 +2,9 @@
 
 A constraint-based text processing API built with Ruby on Rails 8+. Provides literary, linguistic, numerical, and topical text analysis tools through both REST and MCP (Model Context Protocol) interfaces.
 
-**REST API Base URL:** `https://api.appliedpoetics.org`  
-**MCP Endpoint:** `https://mcp.appliedpoetics.org`
+**Base URL:** `https://api.appliedpoetics.org`
+
+The application serves both a REST API and an MCP (Model Context Protocol) server from the same domain. REST endpoints are at `/v1/:category/:method` and the MCP endpoint is at `/v1/mcp`.
 
 ---
 
@@ -290,7 +291,7 @@ Missing required parameters return HTTP 400 with a JSON error body describing th
 
 The API also functions as an MCP (Model Context Protocol) server, enabling AI assistants like Claude, Cursor, and VS Code to discover and invoke tools dynamically.
 
-**MCP Endpoint:** `POST https://mcp.appliedpoetics.org`
+**MCP Endpoint:** `POST https://api.appliedpoetics.org/v1/mcp`
 
 ### Supported Methods
 
@@ -311,7 +312,7 @@ MCP tools are named `{category}_{method}` (e.g., `pop_weatherizer`, `numerology_
 **Request:**
 
 ```bash
-curl -X POST https://mcp.appliedpoetics.org \
+curl -X POST https://api.appliedpoetics.org/v1/mcp \
   -H "Content-Type: application/json" \
   -d '{
     "jsonrpc": "2.0",
@@ -355,7 +356,7 @@ Data files exposed as MCP resources:
 **Read a resource:**
 
 ```bash
-curl -X POST https://mcp.appliedpoetics.org \
+curl -X POST https://api.appliedpoetics.org/v1/mcp \
   -H "Content-Type: application/json" \
   -d '{
     "jsonrpc": "2.0",
@@ -377,7 +378,7 @@ Add to `~/Library/Application Support/Claude/claude_desktop_config.json`:
 {
   "mcpServers": {
     "applied-poetics": {
-      "url": "https://mcp.appliedpoetics.org"
+      "url": "https://api.appliedpoetics.org/v1/mcp"
     }
   }
 }
@@ -392,7 +393,7 @@ Add to settings:
   "mcp": {
     "servers": {
       "applied-poetics": {
-        "url": "https://mcp.appliedpoetics.org"
+        "url": "https://api.appliedpoetics.org/v1/mcp"
       }
     }
   }
