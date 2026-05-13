@@ -80,7 +80,9 @@ end
 class BeauPresente < Oulipean
     def self.create(params)
         letters = params.fetch(:letters).chars
-        self.include_words(params[:text], letters)
+        text = params[:text]
+        result = text.split.select { |w| w.downcase.chars.all? { |c| letters.include?(c) } }
+        { result: result.join(" ") }
     end
 end
 
