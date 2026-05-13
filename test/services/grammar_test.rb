@@ -16,14 +16,14 @@ class GrammarTest < ActiveSupport::TestCase
       punctuation: "."
     })
     # Since punctuation is stripped by split, no fragments end with "."
-    assert_equal "", result
+    assert_equal "", result[:result]
   end
 
   test "Quotations extracts quoted strings" do
     result = Quotations.create({
       text: 'She said "hello" and then "goodbye"'
     })
-    assert_equal "hello goodbye", result
+    assert_equal "hello goodbye", result[:result]
   end
 
   test "PartsOfSpeech extracts nouns" do
@@ -31,7 +31,7 @@ class GrammarTest < ActiveSupport::TestCase
       text: "The quick brown fox jumps.",
       tag: "nouns"
     })
-    assert_includes result, "fox"
+    assert_includes result[:result], "fox"
   end
 
   test "PartsOfSpeech raises error for invalid tag" do

@@ -9,7 +9,8 @@ module V1
         context: 1
       }
       assert_response :ok
-      assert_includes response.body, "brown fox jumps"
+      body = JSON.parse(response.body)
+      assert_includes body["result"], "brown fox jumps"
     end
 
     test "should process syntax alternator" do
@@ -17,10 +18,11 @@ module V1
         text: "banana radar level civic test"
       }
       assert_response :ok
-      assert_includes response.body, "banana"
-      assert_includes response.body, "radar"
-      assert_includes response.body, "level"
-      assert_includes response.body, "civic"
+      body = JSON.parse(response.body)
+      assert_includes body["result"], "banana"
+      assert_includes body["result"], "radar"
+      assert_includes body["result"], "level"
+      assert_includes body["result"], "civic"
     end
 
     test "should process grammar punctuator" do
@@ -53,6 +55,63 @@ module V1
     test "should return bad request for missing category parameters" do
       post v1_path(cat: "syntax", mtd: "concordance"), params: {}
       assert_response :bad_request
+    end
+
+    test "should process numerology pithon" do
+      post v1_path(cat: "numerology", mtd: "pithon"), params: {
+        text: "hello world"
+      }
+      assert_response :ok
+      body = JSON.parse(response.body)
+      assert_equal "3.14", body["result"]
+    end
+
+    test "should process numerology length" do
+      post v1_path(cat: "numerology", mtd: "length"), params: {
+        text: "The quick brown fox jumps over the lazy dog",
+        n: 3
+      }
+      assert_response :ok
+      body = JSON.parse(response.body)
+      assert_equal "The fox the dog", body["result"]
+    end
+
+    test "should process numerology birthday" do
+      post v1_path(cat: "numerology", mtd: "birthday"), params: {
+        text: "alpha bravo charlie delta echo foxtrot golf hotel india juliet",
+        birthdate: "03-14-1985"
+      }
+      assert_response :ok
+      body = JSON.parse(response.body)
+      assert_equal "alpha delta echo india juliet india golf bravo bravo echo", body["result"]
+    end
+
+    test "should process numerology phonewords" do
+      post v1_path(cat: "numerology", mtd: "phonewords"), params: {
+        text: "bad bed cab fed dad ace face",
+        phone: "2223333"
+      }
+      assert_response :ok
+      body = JSON.parse(response.body)
+      assert_equal "bad bed cab fed dad ace face", body["result"]
+    end
+
+    test "should return bad request for numerology with missing params" do
+      post v1_path(cat: "numerology", mtd: "length"), params: {
+        text: "hello world"
+        # missing :n
+      }
+      assert_response :bad_request
+    end
+
+    test "should process pop powerball" do
+      def Powerball.fetch_numbers; [ 1, 2 ]; end
+      post v1_path(cat: "pop", mtd: "powerball"), params: {
+        text: "one two three four five"
+      }
+      assert_response :ok
+      body = JSON.parse(response.body)
+      assert_equal "two four five two three", body["result"]
     end
   end
 end

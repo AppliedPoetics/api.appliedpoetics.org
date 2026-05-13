@@ -9,13 +9,13 @@ class Oulipean < ActionController::Parameters
     def self.exclude_words(text, letters)
         regex = Regexp.union(letters)
         result = text.split.reject { |w| w.downcase.match?(regex) }
-        { "result": result.join(" ") }
+        { result: result.join(" ") }
     end
 
     def self.include_words(text, letters)
         regex = Regexp.union(letters)
         result = text.split.select { |w| w.downcase.match?(regex) }
-        { "result": result.join(" ") }
+        { result: result.join(" ") }
     end
 
     def self.vowels
@@ -58,7 +58,7 @@ class Fibonacci < Oulipean
             fibs << fibs[-1] + fibs[-2]
         end
         result = fibs.select { |n| n <= words.length }.map { |n| words[n - 1] }
-        { "result": result.join(" ") }
+        { result: result.join(" ") }
     end
 end
 
@@ -92,7 +92,8 @@ class Univocalism < Oulipean
     def self.create(params)
         letter = params.fetch(:letters).chars.first
         letters = Oulipean.vowels.chars.reject { |l| l != letter }
-        params[:text].gsub(/\w*#{letters}\w*/i, " ")
+        result = params[:text].gsub(/\w*#{letters}\w*/i, " ")
+        { result: result }
     end
 end
 
@@ -100,9 +101,10 @@ class Snowball < Oulipean
     def self.create(params)
         order = params.fetch(:order)
         if order == "asc"
-            params[:text].split.sort_by(&:length).join(" ")
+            result = params[:text].split.sort_by(&:length).join(" ")
         elsif order == "desc"
-            params[:text].split.sort_by(&:length).reverse.join(" ")
+            result = params[:text].split.sort_by(&:length).reverse.join(" ")
         end
+        { result: result }
     end
 end

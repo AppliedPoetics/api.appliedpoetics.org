@@ -9,7 +9,7 @@ class Punctuator < Grammar
     def self.create(params)
         regex = /[^[:punct:]]/
         result = params[:text].gsub(regex, " ")
-        { "result": result }
+        { result: result }
     end
 end
 
@@ -18,13 +18,15 @@ class Isolator < Grammar
         desired_punct =params.fetch(:punctuation)
         all_punct = "?<=!?.;"
         # raise KeyError unless desired_punct.length == 1
-        params[:text].split(/[#{all_punct}]/).select { |s| s.last == desired_punct }.join(" ")
+        result = params[:text].split(/[#{all_punct}]/).select { |s| s.last == desired_punct }.join(" ")
+        { result: result }
     end
 end
 
 class Quotations < Grammar
     def self.create(params)
-        params[:text].scan(/"([^"]*)"/).flatten.join(" ")
+        result = params[:text].scan(/"([^"]*)"/).flatten.join(" ")
+        { result: result }
     end
 end
 
@@ -45,6 +47,7 @@ class PartsOfSpeech < Grammar
         require "engtagger"
         tgr = EngTagger.new
         tagged = tgr.add_tags(params[:text])
-        tgr.public_send("get_#{part_of_speech}", tagged).keys.join(" ")
+        result = tgr.public_send("get_#{part_of_speech}", tagged).keys.join(" ")
+        { result: result }
     end
 end

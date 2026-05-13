@@ -22,7 +22,7 @@ class Concordance < Syntax
             end
         end
 
-        lines.join
+        { result: lines.join }
     end
 end
 
@@ -47,7 +47,7 @@ class Abecedarian < Syntax
             break unless found
         end
 
-        result.join(" ")
+        { result: result.join(" ") }
     end
 end
 
@@ -58,14 +58,14 @@ class Abcquence < Syntax
             letters = w.gsub(/[^a-zA-Z]/, "").downcase.chars
             letters == letters.sort
         end
-        result.join(" ")
+        { result: result.join(" ") }
     end
 end
 
 class ChainReaction < Syntax
     def self.create(params)
         words = params[:text].split
-        return "" if words.empty?
+        return { result: "" } if words.empty?
 
         result = []
         used = Array.new(words.length, false)
@@ -90,7 +90,7 @@ class ChainReaction < Syntax
             break unless found
         end
 
-        result.join(" ")
+        { result: result.join(" ") }
     end
 end
 
@@ -116,7 +116,7 @@ class Anagram < Syntax
     def self.create(params)
         dict = dictionary
         words = params[:text].split
-        words.map do |w|
+        result = words.map do |w|
             match = w.match(/^(.*?)([a-zA-Z]+)(.*?)$/)
             next w unless match
             prefix, core, suffix = match[1], match[2], match[3]
@@ -128,6 +128,7 @@ class Anagram < Syntax
             formatted = match_case(core, alternative)
             "#{prefix}#{formatted}#{suffix}"
         end.join(" ")
+        { result: result }
     end
 
     def self.match_case(original, replacement)
@@ -149,7 +150,7 @@ class Alternator < Syntax
             pattern = letters.map { |c| vowels.include?(c) ? :v : :c }
             pattern.each_cons(2).all? { |a, b| a != b }
         end
-        result.join(" ")
+        { result: result.join(" ") }
     end
 end
 
@@ -183,6 +184,6 @@ class Hexwords < Syntax
             end
         end
 
-        result.join(" ")
+        { result: result.join(" ") }
     end
 end

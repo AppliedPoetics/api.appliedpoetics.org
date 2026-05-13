@@ -60,9 +60,9 @@ class OulipeanTest < ActiveSupport::TestCase
       letters: "a"
     })
     # Keeps only words without vowels other than 'a' (implementation removes words containing 'a')
-    assert_includes result, "cherry"
-    assert_not_includes result.split, "banana"
-    assert_not_includes result.split, "apple"
+    assert_includes result[:result], "cherry"
+    assert_not_includes result[:result].split, "banana"
+    assert_not_includes result[:result].split, "apple"
   end
 
   test "Snowball sorts words ascending by length" do
@@ -70,7 +70,7 @@ class OulipeanTest < ActiveSupport::TestCase
       text: "a big elephant ran fast",
       order: "asc"
     })
-    assert_equal "a big ran fast elephant", result
+    assert_equal "a big ran fast elephant", result[:result]
   end
 
   test "Snowball sorts words descending by length" do
@@ -78,6 +78,6 @@ class OulipeanTest < ActiveSupport::TestCase
       text: "a big elephant ran fast",
       order: "desc"
     })
-    assert_equal "elephant fast ran big a", result
+    assert_equal "elephant fast ran big a", result[:result]
   end
 end
