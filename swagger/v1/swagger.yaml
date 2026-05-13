@@ -1,0 +1,346 @@
+openapi: 3.0.1
+info:
+  title: Applied Poetics API
+  description: |
+    A RESTful API for applying literary and linguistic constraints to text.
+    Categories include syntax, grammar, oulipean constraints, numerology, pop culture,
+    algorithmic transformations, and poetic forms.
+  version: 1.0.0
+  contact:
+    name: Applied Poetics
+    url: https://www.appliedpoetics.org
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+
+servers:
+  - url: https://api.appliedpoetics.org
+    description: Production server
+  - url: http://localhost:3000
+    description: Development server
+
+paths:
+  /v1/{category}/{method}:
+    post:
+      summary: Apply a text constraint
+      description: |
+        Applies the specified constraint method within a category to the provided text.
+        Each category contains multiple methods with their own parameter requirements.
+      tags:
+        - Constraints
+      parameters:
+        - name: category
+          in: path
+          required: true
+          schema:
+            type: string
+            enum:
+              - syntax
+              - grammar
+              - oulipean
+              - numerology
+              - pop
+              - algorithmic
+              - formic
+          description: The constraint category
+        - name: method
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The specific constraint method to apply
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - text
+              properties:
+                text:
+                  type: string
+                  description: The text to process
+                word:
+                  type: string
+                  description: Target word (for concordance)
+                context:
+                  type: integer
+                  description: Number of surrounding words to include (for concordance)
+                punctuation:
+                  type: string
+                  description: Punctuation delimiter to filter by (for isolator)
+                tag:
+                  type: string
+                  description: Part of speech tag, e.g. nouns, verbs, adjectives, adverbs (for parts_of_speech)
+                letters:
+                  type: string
+                  description: Letters to include/exclude (for lipogram, tautogram, belle_absente, beau_presente, univocalism)
+                order:
+                  type: string
+                  enum: [asc, desc]
+                  description: Sort order by word length (for snowball)
+                n:
+                  type: integer
+                  description: Numeric parameter — every nth word or target word length (for nth, length)
+                birthdate:
+                  type: string
+                  description: Date in DD-MM-YYYY format (for birthday)
+                phone:
+                  type: string
+                  description: 7-digit phone number (for phonewords)
+                distance:
+                  type: integer
+                  description: Maximum Levenshtein edit distance (for levenshtein)
+                image:
+                  type: string
+                  description: Image data or file path (for color_field)
+                mode:
+                  type: string
+                  enum: [sentences, letters, anagrams, list]
+                  description: Processing mode (for color_field)
+      responses:
+        '200':
+          description: Successfully processed text
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: string
+                    description: The transformed text
+              example:
+                result: "quick brown fox"
+        '400':
+          description: Bad request — missing or invalid parameters
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+              example:
+                error: "param is missing or the value is empty: word"
+        '404':
+          description: Unknown category or method
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+              example:
+                error: "uninitialized constant Foo"
+
+  /v1/mcp:
+    post:
+      summary: MCP JSON-RPC endpoint
+      description: |
+        Model Context Protocol (MCP) JSON-RPC 2.0 endpoint for tool and resource discovery.
+        Supports initialization, tool listing/invocation, and resource listing/reading.
+      tags:
+        - MCP
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - jsonrpc
+                - id
+                - method
+              properties:
+                jsonrpc:
+                  type: string
+                  enum: ['2.0']
+                id:
+                  oneOf:
+                    - type: string
+                    - type: integer
+                    - type: 'null'
+                method:
+                  type: string
+                  enum:
+                    - initialize
+                    - tools/list
+                    - tools/call
+                    - resources/list
+                    - resources/read
+                params:
+                  type: object
+            examples:
+              Initialize:
+                summary: Initialize MCP connection
+                value:
+                  jsonrpc: '2.0'
+                  id: 1
+                  method: initialize
+                  params: {}
+              ToolsList:
+                summary: List available tools
+                value:
+                  jsonrpc: '2.0'
+                  id: 2
+                  method: tools/list
+                  params: {}
+              ToolsCall:
+                summary: Call a tool
+                value:
+                  jsonrpc: '2.0'
+                  id: 3
+                  method: tools/call
+                  params:
+                    name: numerology_pithon
+                    arguments:
+                      text: hello world
+              ResourcesList:
+                summary: List available resources
+                value:
+                  jsonrpc: '2.0'
+                  id: 4
+                  method: resources/list
+                  params: {}
+              ResourcesRead:
+                summary: Read a resource
+                value:
+                  jsonrpc: '2.0'
+                  id: 5
+                  method: resources/read
+                  params:
+                    uri: data://colors.txt
+      responses:
+        '200':
+          description: JSON-RPC response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  jsonrpc:
+                    type: string
+                    enum: ['2.0']
+                  id:
+                    oneOf:
+                      - type: string
+                      - type: integer
+                      - type: 'null'
+                  result:
+                    type: object
+                    description: Result payload (present on success)
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: integer
+                      message:
+                        type: string
+                    description: Error details (present on failure)
+              examples:
+                InitializeSuccess:
+                  summary: Successful initialization
+                  value:
+                    jsonrpc: '2.0'
+                    id: 1
+                    result:
+                      protocolVersion: '2024-11-05'
+                      capabilities:
+                        tools:
+                          listChanged: false
+                        resources:
+                          subscribe: false
+                          listChanged: false
+                      serverInfo:
+                        name: applied-poetics-api
+                        version: 1.0.0
+                        icon: https://www.appliedpoetics.org/img/favicon.ico
+                ToolsListSuccess:
+                  summary: Tool listing
+                  value:
+                    jsonrpc: '2.0'
+                    id: 2
+                    result:
+                      tools:
+                        - name: syntax_concordance
+                          description: Finds occurrences of a word with surrounding context
+                          inputSchema:
+                            type: object
+                            properties:
+                              text:
+                                type: string
+                              word:
+                                type: string
+                              context:
+                                type: integer
+                            required:
+                              - text
+                              - word
+                              - context
+                          annotations:
+                            readOnlyHint: true
+                            destructiveHint: false
+                            idempotentHint: true
+                            openWorldHint: false
+                ToolCallSuccess:
+                  summary: Tool invocation result
+                  value:
+                    jsonrpc: '2.0'
+                    id: 3
+                    result:
+                      content:
+                        - type: text
+                          text: '3.14'
+                      isError: false
+                ToolCallError:
+                  summary: Tool invocation error
+                  value:
+                    jsonrpc: '2.0'
+                    id: 4
+                    result:
+                      content:
+                        - type: text
+                          text: 'param is missing or the value is empty: n'
+                      isError: true
+                ParseError:
+                  summary: Invalid JSON request
+                  value:
+                    jsonrpc: '2.0'
+                    id: null
+                    error:
+                      code: -32700
+                      message: Parse error
+                MethodNotFound:
+                  summary: Unknown method
+                  value:
+                    jsonrpc: '2.0'
+                    id: 5
+                    error:
+                      code: -32601
+                      message: 'Method not found: unknown/method'
+        '400':
+          description: Bad request (invalid JSON)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  jsonrpc:
+                    type: string
+                  id:
+                    type: 'null'
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: integer
+                      message:
+                        type: string
+              example:
+                jsonrpc: '2.0'
+                id: null
+                error:
+                  code: -32700
+                  message: Parse error
