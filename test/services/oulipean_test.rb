@@ -38,20 +38,20 @@ class OulipeanTest < ActiveSupport::TestCase
     assert_equal "a maze", result[:result]
   end
 
-  test "BelleAbsente excludes words containing given letters" do
+  test "BelleAbsente excludes words containing any of the given letters" do
     result = BelleAbsente.create({
-      text: "the quick brown fox",
-      letters: "e"
+      text: "my gym psst the quick brown crwth tv shh hmm brr",
+      letters: "aeiou"
     })
-    assert_equal "quick brown fox", result[:result]
+    assert_equal "my gym psst crwth tv shh hmm brr", result[:result]
   end
 
-  test "BeauPresente includes only words containing given letters" do
+  test "BeauPresente includes only words composed exclusively of given letters" do
     result = BeauPresente.create({
-      text: "the quick brown fox",
-      letters: "e"
+      text: "a ab abc abcd",
+      letters: "abc"
     })
-    assert_equal "the", result[:result]
+    assert_equal "a ab abc", result[:result]
   end
 
   test "Univocalism removes words containing unwanted vowels" do

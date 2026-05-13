@@ -41,9 +41,14 @@ module V1
                     resources: { subscribe: false, listChanged: false }
                 },
                 serverInfo: {
-                    name: "applied-poetics-api",
+                    name: "applied-poetics-mcp",
+                    title: "appliedpoetics.org",
+                    description: "appliedpoetics.org Oulipean poetry API",
+                    websiteUrl: "https://api.appliedpoetics.org/v1/mcp",
                     version: "1.0.0",
-                    icon: "https://www.appliedpoetics.org/img/favicon.ico"
+                    icons:[ 
+                        {src: "https://www.appliedpoetics.org/img/favicon.ico", mimeType: "image/png", sizes: ["800x800"]}
+                    ]
                 }
             })
         end

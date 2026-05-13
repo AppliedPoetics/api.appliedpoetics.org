@@ -45,6 +45,13 @@ group :development, :test do
 
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
+
+  # OpenAPI/Swagger spec generation
+  gem "rswag-specs"
 end
 
 gem "simplecov", "~> 0.22.0", group: :test
+
+# OpenAPI/Swagger documentation serving
+gem "rswag-api"
+gem "rswag-ui"
