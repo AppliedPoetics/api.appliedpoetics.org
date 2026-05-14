@@ -1,0 +1,25 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.appliedpoetics/api",
+  "title": "Applied Poetics API",
+  "description": "Constraint-based text processing API with literary, linguistic, and poetic tools",
+  "version": "1.0.0",
+  "websiteUrl": "https://api.appliedpoetics.org",
+  "repository": {
+    "url": "https://github.com/appliedpoetics/api.appliedpoetics.org",
+    "source": "github"
+  },
+  "icons": [
+    {
+      "src": "https://www.appliedpoetics.org/img/favicon.ico",
+      "mimeType": "image/png",
+      "sizes": [ "800x800" ]
+    }
+  ],
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://api.appliedpoetics.org/v1/mcp"
+    }
+  ]
+}

@@ -93,6 +93,7 @@ class McpToolRegistry
                 schema = SCHEMA_OVERRIDES[tool_name] || BASE_SCHEMA.dup
                 tools << {
                     name: tool_name,
+                    title: tool_title(subclass.name),
                     description: tool_description(tool_name, subclass.name),
                     inputSchema: {
                         type: "object",
@@ -132,6 +133,10 @@ class McpToolRegistry
 
     def self.snake_to_camel(str)
         str.split("_").map(&:capitalize).join
+    end
+
+    def self.tool_title(class_name)
+        class_name.gsub(/([A-Z])/, ' \1').strip
     end
 
     def self.tool_annotations(tool_name)

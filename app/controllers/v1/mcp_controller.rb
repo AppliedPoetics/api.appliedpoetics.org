@@ -33,9 +33,13 @@ module V1
             error_response(id, -32603, e.message)
         end
 
-        def handle_initialize(id, _params)
+        def handle_initialize(id, params)
+            client_version = params["protocolVersion"]
+            supported_versions = ["2024-11-05", "2025-11-25"]
+            negotiated_version = supported_versions.include?(client_version) ? client_version : "2024-11-05"
+
             success_response(id, {
-                protocolVersion: "2024-11-05",
+                protocolVersion: negotiated_version,
                 capabilities: {
                     tools: { listChanged: false },
                     resources: { subscribe: false, listChanged: false }

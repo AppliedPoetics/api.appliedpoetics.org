@@ -25,7 +25,7 @@ gem "kamal", require: false
 gem "thruster", require: false
 
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin Ajax possible
-# gem "rack-cors"
+gem "rack-cors"
 
 # Part-of-speech tagging for English text
 gem "engtagger"
