@@ -467,6 +467,14 @@ bin/rails test
 
 ---
 
+## Privacy Policy
+
+Applied Poetics does not store, sell, or share the text submitted through this API. Inputs are processed ephemerally in memory and discarded immediately after a response is returned. Server logs are retained for no more than 30 days for operational monitoring and abuse prevention.
+
+For the full policy, see [PRIVACY.md](PRIVACY.md).
+
+---
+
 ## License
 
 MIT
