@@ -11,6 +11,6 @@ Rails.application.config.middleware.insert_before 0, Rack::Cors do
 
     resource "/v1/mcp",
       headers: :any,
-      methods: [:post, :options]
+      methods: [ :post, :options ]
   end
 end

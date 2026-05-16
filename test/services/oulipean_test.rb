@@ -97,6 +97,49 @@ class OulipeanTest < ActiveSupport::TestCase
     assert_includes words, "in"            # no 'a'
   end
 
+  test "Lipogram works with uppercase letters parameter" do
+    result = Lipogram.create({
+      text: "The Quick Brown Fox",
+      letters: "E"
+    })
+    words = result[:result].split
+    assert_not_includes words, "The"    # contains 'E' (via 'e')
+    assert_includes words, "Quick"         # no 'e'
+    assert_includes words, "Fox"           # no 'e'
+  end
+
+  test "Tautogram works with uppercase letters parameter" do
+    result = Tautogram.create({
+      text: "The Quick Brown Fox",
+      letters: "O"
+    })
+    words = result[:result].split
+    assert_includes words, "Brown"         # contains 'o'
+    assert_includes words, "Fox"           # contains 'o'
+    assert_not_includes words, "The"       # no 'o'
+    assert_not_includes words, "Quick"     # no 'o'
+  end
+
+  test "BeauPresente works with uppercase letters parameter" do
+    result = BeauPresente.create({
+      text: "A B C D",
+      letters: "ABC"
+    })
+    words = result[:result].split
+    assert_equal [ "A", "B", "C" ], words
+  end
+
+  test "Univocalism works with uppercase letters parameter" do
+    result = Univocalism.create({
+      text: "The Quick Brown Fox",
+      letters: "E"
+    })
+    words = result[:result].split
+    assert_not_includes words, "The"       # contains 'e'
+    assert_includes words, "Quick"         # no 'e'
+    assert_includes words, "Fox"           # no 'e'
+  end
+
   test "Snowball sorts words ascending by length with punctuation removed and character count suffix" do
     result = Snowball.create({
       text: @text,

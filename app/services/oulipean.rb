@@ -7,13 +7,13 @@ class Oulipean < ActionController::Parameters
     end
 
     def self.exclude_words(text, letters)
-        regex = Regexp.union(letters)
+        regex = Regexp.union(letters.map(&:downcase))
         result = text.split.reject { |w| w.downcase.match?(regex) }
         { result: result.join(" ") }
     end
 
     def self.include_words(text, letters)
-        regex = Regexp.union(letters)
+        regex = Regexp.union(letters.map(&:downcase))
         result = text.split.select { |w| w.downcase.match?(regex) }
         { result: result.join(" ") }
     end
@@ -79,7 +79,7 @@ end
 
 class BeauPresente < Oulipean
     def self.create(params)
-        letters = params.fetch(:letters).chars
+        letters = params.fetch(:letters).downcase.chars
         text = params[:text]
         result = text.split.select { |w| w.downcase.chars.all? { |c| letters.include?(c) } }
         { result: result.join(" ") }
@@ -92,7 +92,7 @@ class Univocalism < Oulipean
     end
 
     def self.create(params)
-        letter = params.fetch(:letters).chars.first
+        letter = params.fetch(:letters).downcase.chars.first
         letters = Oulipean.vowels.chars.reject { |l| l != letter }
         result = params[:text].gsub(/\w*#{letters}\w*/i, " ")
         { result: result }

@@ -35,7 +35,7 @@ module V1
 
         def handle_initialize(id, params)
             client_version = params["protocolVersion"]
-            supported_versions = ["2024-11-05", "2025-11-25"]
+            supported_versions = [ "2024-11-05", "2025-11-25" ]
             negotiated_version = supported_versions.include?(client_version) ? client_version : "2024-11-05"
 
             success_response(id, {
