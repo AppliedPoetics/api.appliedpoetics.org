@@ -96,6 +96,52 @@ module V1
       assert_equal "bad bed cab fed dad ace face", body["result"]
     end
 
+    test "should process operation gutenberg" do
+      body = <<~TEXT
+        Header text
+        *** START OF THE PROJECT GUTENBERG EBOOK TEST ***
+        The real content here.
+        *** END OF THE PROJECT GUTENBERG EBOOK TEST ***
+        Footer text
+      TEXT
+
+      original = Net::HTTP.method(:get)
+      Net::HTTP.define_singleton_method(:get) { |_uri| body }
+      post v1_path(cat: "operation", mtd: "gutenberg"), params: {
+        url: "https://example.com/test.txt"
+      }
+      Net::HTTP.define_singleton_method(:get, original)
+
+      assert_response :ok
+      resp = JSON.parse(response.body)
+      assert_equal "The real content here.", resp["result"]
+    end
+
+    test "should process operation wikipedia" do
+      api_response = {
+        "query" => {
+          "pages" => {
+            "12345" => {
+              "pageid" => 12345,
+              "title" => "Ruby",
+              "extract" => "Ruby is a dynamic language."
+            }
+          }
+        }
+      }.to_json
+
+      original = Net::HTTP.method(:get)
+      Net::HTTP.define_singleton_method(:get) { |_uri| api_response }
+      post v1_path(cat: "operation", mtd: "wikipedia"), params: {
+        title: "Ruby"
+      }
+      Net::HTTP.define_singleton_method(:get, original)
+
+      assert_response :ok
+      resp = JSON.parse(response.body)
+      assert_equal "Ruby is a dynamic language.", resp["result"]
+    end
+
     test "should return bad request for numerology with missing params" do
       post v1_path(cat: "numerology", mtd: "length"), params: {
         text: "hello world"

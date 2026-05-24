@@ -39,6 +39,8 @@ module V1
       assert_includes tool_names, "pop_weatherizer"
       assert_includes tool_names, "pop_colorizer"
       assert_includes tool_names, "pop_sartorializer"
+      assert_includes tool_names, "operation_gutenberg"
+      assert_includes tool_names, "operation_wikipedia"
     end
 
     test "mcp tools/call invokes a tool" do
@@ -142,6 +144,66 @@ module V1
       assert_response :bad_request
       body = JSON.parse(response.body)
       assert_equal -32700, body["error"]["code"]
+    end
+
+    test "mcp tools/call operation_gutenberg strips Gutenberg markers" do
+      body = <<~TEXT
+        Header text
+        *** START OF THE PROJECT GUTENBERG EBOOK TEST ***
+        The real content here.
+        *** END OF THE PROJECT GUTENBERG EBOOK TEST ***
+        Footer text
+      TEXT
+
+      original = Net::HTTP.method(:get)
+      Net::HTTP.define_singleton_method(:get) { |_uri| body }
+      post v1_mcp_path, params: {
+        jsonrpc: "2.0",
+        id: 9,
+        method: "tools/call",
+        params: {
+          name: "operation_gutenberg",
+          arguments: { url: "https://example.com/test.txt" }
+        }
+      }.to_json, headers: { "CONTENT_TYPE" => "application/json" }
+      Net::HTTP.define_singleton_method(:get, original)
+
+      assert_response :ok
+      resp = JSON.parse(response.body)
+      assert_equal false, resp["result"]["isError"]
+      assert_equal "The real content here.", resp["result"]["content"].first["text"]
+    end
+
+    test "mcp tools/call operation_wikipedia returns article extract" do
+      api_response = {
+        "query" => {
+          "pages" => {
+            "12345" => {
+              "pageid" => 12345,
+              "title" => "Ruby",
+              "extract" => "Ruby is a dynamic language."
+            }
+          }
+        }
+      }.to_json
+
+      original = Net::HTTP.method(:get)
+      Net::HTTP.define_singleton_method(:get) { |_uri| api_response }
+      post v1_mcp_path, params: {
+        jsonrpc: "2.0",
+        id: 10,
+        method: "tools/call",
+        params: {
+          name: "operation_wikipedia",
+          arguments: { title: "Ruby" }
+        }
+      }.to_json, headers: { "CONTENT_TYPE" => "application/json" }
+      Net::HTTP.define_singleton_method(:get, original)
+
+      assert_response :ok
+      resp = JSON.parse(response.body)
+      assert_equal false, resp["result"]["isError"]
+      assert_equal "Ruby is a dynamic language.", resp["result"]["content"].first["text"]
     end
   end
 end

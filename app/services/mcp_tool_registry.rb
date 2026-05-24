@@ -65,6 +65,12 @@ class McpToolRegistry
             text: { type: "string" },
             image: { type: "string", description: "Image data or file path" },
             mode: { type: "string", enum: [ "sentences", "letters", "anagrams", "list" ], description: "Processing mode" }
+        },
+        "operation_gutenberg" => {
+            url: { type: "string", description: "URL of the Project Gutenberg text file" }
+        },
+        "operation_wikipedia" => {
+            title: { type: "string", description: "Title of the Wikipedia article" }
         }
     }.freeze
 
@@ -75,7 +81,8 @@ class McpToolRegistry
         "numerology" => Numerology,
         "pop" => Pop,
         "algorithmic" => Algorithmic,
-        "formic" => Formic
+        "formic" => Formic,
+        "operation" => Operation
     }.freeze
 
     RESOURCES = [
@@ -227,6 +234,10 @@ class McpToolRegistry
             "Arranges lines into a triolet form"
         when "Pantoum"
             "Arranges lines into a pantoum form"
+        when "Gutenberg"
+            "Downloads a Project Gutenberg text by URL and strips pre-/post-amble"
+        when "Wikipedia"
+            "Returns the plain text extract of a Wikipedia article by title"
         else
             "Applies the #{class_name} constraint to text"
         end
