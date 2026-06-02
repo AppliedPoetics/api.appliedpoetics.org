@@ -163,10 +163,12 @@ class ColorField < Algorithmic
     def self.sentences_mode(text, color_names)
         return "" if text.empty? || color_names.empty?
 
-        sentences = text.split(/(?<=[.!?])\s+/)
-        sentences.select do |sentence|
-            color_names.any? { |color| sentence.downcase.include?(color) }
-        end.join(" ")
+        text.split("\n").map do |line|
+            sentences = line.split(/(?<=[.!?])\s+/)
+            sentences.select do |sentence|
+                color_names.any? { |color| sentence.downcase.include?(color) }
+            end.join(" ")
+        end.join("\n")
     end
 
     def self.letters_mode(text, color_names)
@@ -174,7 +176,9 @@ class ColorField < Algorithmic
 
         allowed = color_names.join.downcase.chars.uniq.sort.join
         regex = /\A[#{Regexp.escape(allowed)}]+\z/i
-        text.split.select { |word| word.gsub(/[^a-zA-Z]/, "").match?(regex) }.join(" ")
+        text.split("\n").map do |line|
+            line.split.select { |word| word.gsub(/[^a-zA-Z]/, "").match?(regex) }.join(" ")
+        end.join("\n")
     end
 
     def self.anagrams_mode(text, color_names)
@@ -182,11 +186,13 @@ class ColorField < Algorithmic
 
         color_keys = color_names.map { |name| name.downcase.chars.sort.join }.to_set
 
-        text.split.select do |word|
-            core = word.downcase.gsub(/[^a-z]/, "")
-            next false if core.empty?
-            color_keys.include?(core.chars.sort.join)
-        end.join(" ")
+        text.split("\n").map do |line|
+            line.split.select do |word|
+                core = word.downcase.gsub(/[^a-z]/, "")
+                next false if core.empty?
+                color_keys.include?(core.chars.sort.join)
+            end.join(" ")
+        end.join("\n")
     end
 
     def self.list_mode(color_names)

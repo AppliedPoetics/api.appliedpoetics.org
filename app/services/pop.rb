@@ -15,20 +15,24 @@ class Powerball < Pop
 
     def self.create(params)
         numbers = fetch_numbers
-        words = params[:text].split
-        count = words.length
-        return { result: "" } if count.zero?
+        result = params[:text].split("\n").map do |line|
+            words = line.split
+            count = words.length
+            next "" if count.zero?
 
-        result = []
-        pos = 0
+            line_result = []
+            pos = 0
 
-        count.times do |i|
-            n = numbers[i % numbers.length]
-            pos = (pos + n) % count
-            result << words[pos]
-        end
+            count.times do |i|
+                n = numbers[i % numbers.length]
+                pos = (pos + n) % count
+                line_result << words[pos]
+            end
 
-        { result: result.join(" ") }
+            line_result.join(" ")
+        end.join("\n")
+
+        { result: result }
     end
 
     def self.fetch_numbers
@@ -67,9 +71,11 @@ class Weatherizer < Pop
         return { result: "" } if text.nil? || text.strip.empty?
 
         terms_regex = Regexp.union(terms.map { |t| /\b#{Regexp.escape(t)}\b/i })
-        sentences = text.split(/(?<=[.!?])\s+/)
-        result = sentences.select { |s| s.match?(terms_regex) }
-        { result: result.join(" ") }
+        result = text.split("\n").map do |line|
+            sentences = line.split(/(?<=[.!?])\s+/)
+            sentences.select { |s| s.match?(terms_regex) }.join(" ")
+        end.join("\n")
+        { result: result }
     end
 end
 
@@ -96,9 +102,11 @@ class Colorizer < Pop
         return { result: "" } if text.nil? || text.strip.empty?
 
         colors_regex = Regexp.union(color_names.map { |c| /\b#{Regexp.escape(c)}\b/i })
-        sentences = text.split(/(?<=[.!?])\s+/)
-        result = sentences.select { |s| s.match?(colors_regex) }
-        { result: result.join(" ") }
+        result = text.split("\n").map do |line|
+            sentences = line.split(/(?<=[.!?])\s+/)
+            sentences.select { |s| s.match?(colors_regex) }.join(" ")
+        end.join("\n")
+        { result: result }
     end
 end
 
@@ -124,8 +132,10 @@ class Sartorializer < Pop
         return { result: "" } if text.nil? || text.strip.empty?
 
         terms_regex = Regexp.union(terms.map { |t| /\b#{Regexp.escape(t)}\b/i })
-        sentences = text.split(/(?<=[.!?])\s+/)
-        result = sentences.select { |s| s.match?(terms_regex) }
-        { result: result.join(" ") }
+        result = text.split("\n").map do |line|
+            sentences = line.split(/(?<=[.!?])\s+/)
+            sentences.select { |s| s.match?(terms_regex) }.join(" ")
+        end.join("\n")
+        { result: result }
     end
 end

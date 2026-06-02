@@ -29,69 +29,78 @@ end
 
 class Abecedarian < Syntax
     def self.create(params)
-        words = params[:text].split
-        result = []
-        current_letter = "a"
-        used = Array.new(words.length, false)
+        result = params[:text].split("\n").map do |line|
+            words = line.split
+            line_result = []
+            current_letter = "a"
+            used = Array.new(words.length, false)
 
-        loop do
-            found = false
-            words.each_with_index do |w, idx|
-                next if used[idx]
-                if w.downcase.start_with?(current_letter)
-                    result << w
-                    used[idx] = true
-                    current_letter = current_letter == "z" ? "a" : current_letter.next
-                    found = true
+            loop do
+                found = false
+                words.each_with_index do |w, idx|
+                    next if used[idx]
+                    if w.downcase.start_with?(current_letter)
+                        line_result << w
+                        used[idx] = true
+                        current_letter = current_letter == "z" ? "a" : current_letter.next
+                        found = true
+                    end
                 end
+                break unless found
             end
-            break unless found
-        end
 
-        { result: result.join(" ") }
+            line_result.join(" ")
+        end.join("\n")
+
+        { result: result }
     end
 end
 
 class Abcquence < Syntax
     def self.create(params)
-        words = params[:text].split
-        result = words.select do |w|
-            letters = w.gsub(/[^a-zA-Z]/, "").downcase.chars
-            letters == letters.sort
-        end
-        { result: result.join(" ") }
+        result = params[:text].split("\n").map do |line|
+            words = line.split
+            words.select do |w|
+                letters = w.gsub(/[^a-zA-Z]/, "").downcase.chars
+                letters == letters.sort
+            end.join(" ")
+        end.join("\n")
+        { result: result }
     end
 end
 
 class ChainReaction < Syntax
     def self.create(params)
-        words = params[:text].split
-        return { result: "" } if words.empty?
+        result = params[:text].split("\n").map do |line|
+            words = line.split
+            next "" if words.empty?
 
-        result = []
-        used = Array.new(words.length, false)
+            line_result = []
+            used = Array.new(words.length, false)
 
-        # Start with the first word
-        result << words[0]
-        used[0] = true
-        current_letter = words[0].downcase[-1]
+            line_result << words[0]
+            used[0] = true
+            current_letter = words[0].downcase[-1]
 
-        loop do
-            found = false
-            words.each_with_index do |w, idx|
-                next if used[idx]
-                if w.downcase.start_with?(current_letter)
-                    result << w
-                    used[idx] = true
-                    current_letter = w.downcase[-1]
-                    found = true
-                    break
+            loop do
+                found = false
+                words.each_with_index do |w, idx|
+                    next if used[idx]
+                    if w.downcase.start_with?(current_letter)
+                        line_result << w
+                        used[idx] = true
+                        current_letter = w.downcase[-1]
+                        found = true
+                        break
+                    end
                 end
+                break unless found
             end
-            break unless found
-        end
 
-        { result: result.join(" ") }
+            line_result.join(" ")
+        end.join("\n")
+
+        { result: result }
     end
 end
 
@@ -116,19 +125,21 @@ class Anagram < Syntax
 
     def self.create(params)
         dict = dictionary
-        words = params[:text].split
-        result = words.map do |w|
-            match = w.match(/^(.*?)([a-zA-Z]+)(.*?)$/)
-            next w unless match
-            prefix, core, suffix = match[1], match[2], match[3]
-            next w if core.length <= 2
-            key = core.downcase.chars.sort.join
-            candidates = dict[key] || []
-            alternative = candidates.find { |c| c != core.downcase }
-            next w unless alternative
-            formatted = match_case(core, alternative)
-            "#{prefix}#{formatted}#{suffix}"
-        end.join(" ")
+        result = params[:text].split("\n").map do |line|
+            words = line.split
+            words.map do |w|
+                match = w.match(/^(.*?)([a-zA-Z]+)(.*?)$/)
+                next w unless match
+                prefix, core, suffix = match[1], match[2], match[3]
+                next w if core.length <= 2
+                key = core.downcase.chars.sort.join
+                candidates = dict[key] || []
+                alternative = candidates.find { |c| c != core.downcase }
+                next w unless alternative
+                formatted = match_case(core, alternative)
+                "#{prefix}#{formatted}#{suffix}"
+            end.join(" ")
+        end.join("\n")
         { result: result }
     end
 
@@ -143,15 +154,17 @@ end
 
 class Alternator < Syntax
     def self.create(params)
-        words = params[:text].split
         vowels = "aeiou"
-        result = words.select do |w|
-            letters = w.gsub(/[^a-zA-Z]/, "").downcase.chars
-            next false if letters.length < 2
-            pattern = letters.map { |c| vowels.include?(c) ? :v : :c }
-            pattern.each_cons(2).all? { |a, b| a != b }
-        end
-        { result: result.join(" ") }
+        result = params[:text].split("\n").map do |line|
+            words = line.split
+            words.select do |w|
+                letters = w.gsub(/[^a-zA-Z]/, "").downcase.chars
+                next false if letters.length < 2
+                pattern = letters.map { |c| vowels.include?(c) ? :v : :c }
+                pattern.each_cons(2).all? { |a, b| a != b }
+            end.join(" ")
+        end.join("\n")
+        { result: result }
     end
 end
 
@@ -164,27 +177,29 @@ class Hexwords < Syntax
     }.freeze
 
     def self.create(params)
-        words = params[:text].split
-        result = words.filter_map do |w|
-            cleaned = w.gsub(/[^a-zA-Z0-9]/, "")
-            next if cleaned.empty?
+        result = params[:text].split("\n").map do |line|
+            words = line.split
+            words.filter_map do |w|
+                cleaned = w.gsub(/[^a-zA-Z0-9]/, "")
+                next if cleaned.empty?
 
-            if cleaned.match?(/\A[a-fA-F0-9]+\z/)
-                cleaned.downcase
-            else
-                mapped = cleaned.downcase.chars.map do |c|
-                    if c.match?(/\d/)
-                        c
-                    else
-                        HEX_MAP[c]
+                if cleaned.match?(/\A[a-fA-F0-9]+\z/)
+                    cleaned.downcase
+                else
+                    mapped = cleaned.downcase.chars.map do |c|
+                        if c.match?(/\d/)
+                            c
+                        else
+                            HEX_MAP[c]
+                        end
                     end
+
+                    next if mapped.include?(nil)
+                    mapped.join
                 end
+            end.join(" ")
+        end.join("\n")
 
-                next if mapped.include?(nil)
-                mapped.join
-            end
-        end
-
-        { result: result.join(" ") }
+        { result: result }
     end
 end

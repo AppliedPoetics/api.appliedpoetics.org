@@ -32,7 +32,7 @@ class Gutenberg < Operation
             body
         end
 
-        { result: text.strip }
+        { result: text }
     rescue SocketError, Net::OpenTimeout, Net::ReadTimeout => e
         raise "Failed to download Gutenberg text: #{e.message}"
     end

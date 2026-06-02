@@ -14,8 +14,10 @@ class Nth < Numerology
         n = params.fetch(:n).to_i
         raise ArgumentError, "n must be a positive integer" unless n.positive?
 
-        words = params[:text].split
-        result = words.each_with_index.filter_map { |w, i| w if ((i + 1) % n).zero? }.join(" ")
+        result = params[:text].split("\n").map do |line|
+            words = line.split
+            words.each_with_index.filter_map { |w, i| w if ((i + 1) % n).zero? }.join(" ")
+        end.join("\n")
         { result: result }
     end
 end
@@ -34,8 +36,10 @@ class Length < Numerology
         n = params.fetch(:n).to_i
         raise ArgumentError, "n must be a positive integer" unless n.positive?
 
-        words = params[:text].split
-        result = words.select { |w| w.length == n }.join(" ")
+        result = params[:text].split("\n").map do |line|
+            words = line.split
+            words.select { |w| w.length == n }.join(" ")
+        end.join("\n")
         { result: result }
     end
 end
@@ -48,18 +52,24 @@ class Birthday < Numerology
         end
 
         digits = birthdate.delete("-").chars.map(&:to_i)
-        words = params[:text].split
-        count = words.length
-        result = []
-        pos = 0
+        result = params[:text].split("\n").map do |line|
+            words = line.split
+            count = words.length
+            next "" if count.zero?
 
-        count.times do |i|
-            d = digits[i % digits.length]
-            pos = (pos + d) % count
-            result << words[pos]
-        end
+            line_result = []
+            pos = 0
 
-        { result: result.join(" ") }
+            count.times do |i|
+                d = digits[i % digits.length]
+                pos = (pos + d) % count
+                line_result << words[pos]
+            end
+
+            line_result.join(" ")
+        end.join("\n")
+
+        { result: result }
     end
 end
 
@@ -84,8 +94,10 @@ class Phonewords < Numerology
         end
 
         allowed = phone.chars.flat_map { |d| PHONE_MAP[d].chars }.to_set
-        words = params[:text].split
-        result = words.select { |w| w.gsub(/[^a-zA-Z]/, "").upcase.chars.all? { |c| allowed.include?(c) } }.join(" ")
+        result = params[:text].split("\n").map do |line|
+            words = line.split
+            words.select { |w| w.gsub(/[^a-zA-Z]/, "").upcase.chars.all? { |c| allowed.include?(c) } }.join(" ")
+        end.join("\n")
         { result: result }
     end
 end

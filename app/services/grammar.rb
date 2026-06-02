@@ -9,24 +9,28 @@ end
 class Punctuator < Grammar
     def self.create(params)
         regex = /[^[:punct:]]/
-        result = params[:text].gsub(regex, " ")
+        result = params[:text].split("\n").map { |line| line.gsub(regex, " ") }.join("\n")
         { result: result }
     end
 end
 
 class Isolator < Grammar
     def self.create(params)
-        desired_punct =params.fetch(:punctuation)
+        desired_punct = params.fetch(:punctuation)
         all_punct = "?<=!?.;"
         # raise KeyError unless desired_punct.length == 1
-        result = params[:text].split(/[#{all_punct}]/).select { |s| s.last == desired_punct }.join(" ")
+        result = params[:text].split("\n").map do |line|
+            line.split(/[#{all_punct}]/).select { |s| s.last == desired_punct }.join(" ")
+        end.join("\n")
         { result: result }
     end
 end
 
 class Quotations < Grammar
     def self.create(params)
-        result = params[:text].scan(/"([^"]*)"/).flatten.join(" ")
+        result = params[:text].split("\n").map do |line|
+            line.scan(/"([^"]*)"/).flatten.join(" ")
+        end.join("\n")
         { result: result }
     end
 end
@@ -47,8 +51,10 @@ class PartsOfSpeech < Grammar
         end
         require "engtagger"
         tgr = EngTagger.new
-        tagged = tgr.add_tags(params[:text])
-        result = tgr.public_send("get_#{part_of_speech}", tagged).keys.join(" ")
+        result = params[:text].split("\n").map do |line|
+            tagged = tgr.add_tags(line)
+            tgr.public_send("get_#{part_of_speech}", tagged).keys.join(" ")
+        end.join("\n")
         { result: result }
     end
 end

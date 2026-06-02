@@ -114,7 +114,7 @@ module V1
 
       assert_response :ok
       resp = JSON.parse(response.body)
-      assert_equal "The real content here.", resp["result"]
+      assert_equal "\nThe real content here.\n", resp["result"]
     end
 
     test "should process operation wikipedia" do

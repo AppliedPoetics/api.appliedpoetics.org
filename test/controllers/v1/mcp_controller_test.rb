@@ -171,7 +171,7 @@ module V1
       assert_response :ok
       resp = JSON.parse(response.body)
       assert_equal false, resp["result"]["isError"]
-      assert_equal "The real content here.", resp["result"]["content"].first["text"]
+      assert_equal "\nThe real content here.\n", resp["result"]["content"].first["text"]
     end
 
     test "mcp tools/call operation_wikipedia returns article extract" do

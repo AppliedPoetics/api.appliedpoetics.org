@@ -25,7 +25,7 @@ class OperationTest < ActiveSupport::TestCase
 
     with_net_http_stub(body) do
       result = Gutenberg.create({ url: "https://example.com/test.txt" })
-      assert_equal "The real content.\nIt spans multiple lines.", result[:result]
+      assert_equal "\nThe real content.\nIt spans multiple lines.\n", result[:result]
     end
   end
 
@@ -38,7 +38,7 @@ class OperationTest < ActiveSupport::TestCase
 
     with_net_http_stub(body) do
       result = Gutenberg.create({ url: "https://example.com/test.txt" })
-      assert_equal "Content only.", result[:result]
+      assert_equal "\nContent only.\n", result[:result]
     end
   end
 
@@ -51,7 +51,7 @@ class OperationTest < ActiveSupport::TestCase
 
     with_net_http_stub(body) do
       result = Gutenberg.create({ url: "https://example.com/test.txt" })
-      assert_equal "Content only.", result[:result]
+      assert_equal "Content only.\n", result[:result]
     end
   end
 

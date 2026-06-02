@@ -5,7 +5,7 @@ class Formic < ActionController::Parameters
 
       case mode
       when :lines
-        text.strip.split("\n")
+        text.split("\n")
       when :end_words
         lines = text.strip.split("\n")
         if lines.length >= 6

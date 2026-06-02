@@ -9,14 +9,18 @@ class Oulipean < ActionController::Parameters
 
     def self.exclude_words(text, letters)
         regex = Regexp.union(letters.map(&:downcase))
-        result = text.split.reject { |w| w.downcase.match?(regex) }
-        { result: result.join(" ") }
+        result = text.split("\n").map do |line|
+            line.split.reject { |w| w.downcase.match?(regex) }.join(" ")
+        end.join("\n")
+        { result: result }
     end
 
     def self.include_words(text, letters)
         regex = Regexp.union(letters.map(&:downcase))
-        result = text.split.select { |w| w.downcase.match?(regex) }
-        { result: result.join(" ") }
+        result = text.split("\n").map do |line|
+            line.split.select { |w| w.downcase.match?(regex) }.join(" ")
+        end.join("\n")
+        { result: result }
     end
 
     def self.vowels
@@ -53,13 +57,15 @@ end
 
 class Fibonacci < Oulipean
     def self.create(params)
-        words = params[:text].split
-        fibs = [ 1, 1 ]
-        while fibs.last <= words.length
-            fibs << fibs[-1] + fibs[-2]
-        end
-        result = fibs.select { |n| n <= words.length }.map { |n| words[n - 1] }
-        { result: result.join(" ") }
+        result = params[:text].split("\n").map do |line|
+            words = line.split
+            fibs = [ 1, 1 ]
+            while fibs.last <= words.length
+                fibs << fibs[-1] + fibs[-2]
+            end
+            fibs.select { |n| n <= words.length }.map { |n| words[n - 1] }.join(" ")
+        end.join("\n")
+        { result: result }
     end
 end
 
@@ -82,8 +88,10 @@ class BeauPresente < Oulipean
     def self.create(params)
         letters = params.fetch(:letters).downcase.chars
         text = params[:text]
-        result = text.split.select { |w| w.downcase.chars.all? { |c| letters.include?(c) } }
-        { result: result.join(" ") }
+        result = text.split("\n").map do |line|
+            line.split.select { |w| w.downcase.chars.all? { |c| letters.include?(c) } }.join(" ")
+        end.join("\n")
+        { result: result }
     end
 end
 
