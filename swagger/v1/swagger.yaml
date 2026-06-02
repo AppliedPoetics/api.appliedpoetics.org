@@ -4,7 +4,7 @@ info:
   description: |
     A RESTful API for applying literary and linguistic constraints to text.
     Categories include syntax, grammar, oulipean constraints, numerology, pop culture,
-    algorithmic transformations, and poetic forms.
+    algorithmic transformations, poetic forms, and external data operations.
   version: 1.0.0
   contact:
     name: Applied Poetics
@@ -42,6 +42,7 @@ paths:
               - pop
               - algorithmic
               - formic
+              - operation
           description: The constraint category
         - name: method
           in: path
@@ -55,12 +56,10 @@ paths:
           application/json:
             schema:
               type: object
-              required:
-                - text
               properties:
                 text:
                   type: string
-                  description: The text to process
+                  description: The text to process (required by most constraint methods)
                 word:
                   type: string
                   description: Target word (for concordance)
@@ -99,6 +98,13 @@ paths:
                   type: string
                   enum: [sentences, letters, anagrams, list]
                   description: Processing mode (for color_field)
+                url:
+                  type: string
+                  format: uri
+                  description: Project Gutenberg text URL (for operation/gutenberg)
+                title:
+                  type: string
+                  description: Wikipedia article title (for operation/wikipedia)
       responses:
         '200':
           description: Successfully processed text
