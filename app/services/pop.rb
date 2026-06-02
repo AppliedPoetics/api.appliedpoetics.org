@@ -4,7 +4,8 @@ require "uri"
 
 class Pop < ActionController::Parameters
     def self.create(mtd, params)
-        cls = Object.const_get(mtd.capitalize)
+        class_name = mtd.split("_").map(&:capitalize).join
+        cls = Object.const_get(class_name)
         cls.create(params)
     end
 end

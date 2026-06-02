@@ -186,5 +186,34 @@ module V1
       body = JSON.parse(response.body)
       assert_equal "She wore a beautiful silk dress. He had on leather boots.", body["result"]
     end
+
+    test "should process oulipean belle_absente" do
+      post v1_path(cat: "oulipean", mtd: "belle_absente"), params: {
+        text: "Gerald was a kind brown duck who liked quick reflections by the sky",
+        letters: "aeiou"
+      }
+      assert_response :ok
+      body = JSON.parse(response.body)
+      assert_equal "by sky", body["result"]
+    end
+
+    test "should process oulipean beau_presente" do
+      post v1_path(cat: "oulipean", mtd: "beau_presente"), params: {
+        text: "A B C D",
+        letters: "abc"
+      }
+      assert_response :ok
+      body = JSON.parse(response.body)
+      assert_equal "A B C", body["result"]
+    end
+
+    test "should process syntax chain_reaction" do
+      post v1_path(cat: "syntax", mtd: "chain_reaction"), params: {
+        text: "cat tree eagle ant"
+      }
+      assert_response :ok
+      body = JSON.parse(response.body)
+      assert_equal "cat tree eagle", body["result"]
+    end
   end
 end
