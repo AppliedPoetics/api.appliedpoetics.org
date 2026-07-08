@@ -12,4 +12,4 @@
 # Example:
 #   - CVE-XXXX-YYYYY  # net-imap: This API does not process IMAP traffic.
 
-ignore:
+ignore: []
