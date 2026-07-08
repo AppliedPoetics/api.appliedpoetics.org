@@ -1,5 +1,15 @@
 # Audit all gems listed in the Gemfile for known security problems by running bin/bundler-audit.
 # CVEs that are not relevant to the application can be enumerated on the ignore list below.
+#
+# IMPORTANT: Only add CVEs to the ignore list when:
+#   1. The vulnerability cannot be exploited in this application's specific architecture.
+#   2. A patched version is not yet available.
+#   3. The risk has been formally assessed and accepted.
+#
+# Each ignored entry MUST include a comment explaining why it does not apply,
+# referencing the affected gem and the specific usage context.
+#
+# Example:
+#   - CVE-XXXX-YYYYY  # net-imap: This API does not process IMAP traffic.
 
 ignore:
-  - CVE-THAT-DOES-NOT-APPLY
