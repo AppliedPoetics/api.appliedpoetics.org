@@ -100,7 +100,7 @@ GEM
     dotenv (3.2.0)
     drb (2.2.3)
     ed25519 (1.4.0)
-    engtagger (0.4.2)
+    engtagger (0.4.3)
       sin_lru_redux
     erb (6.0.7)
     erubi (1.13.1)
@@ -289,7 +289,7 @@ GEM
     ruby-progressbar (1.13.0)
     securerandom (0.4.1)
     simplecov (1.0.3)
-    sin_lru_redux (2.5.2)
+    sin_lru_redux (2.5.3)
     sshkit (1.25.0)
       base64
       logger
