@@ -62,6 +62,9 @@ jobs:
         with:
           bundler-cache: true
 
+      - name: Install ImageMagick
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq imagemagick
+
       - name: Run tests
         env:
           RAILS_ENV: test
