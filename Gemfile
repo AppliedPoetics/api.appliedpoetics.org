@@ -33,6 +33,9 @@ gem "engtagger"
 # Pure-Ruby PNG image manipulation
 gem "chunky_png"
 
+# Image format conversion for ColorField (JPEG/GIF/WebP/BMP -> PNG)
+gem "mini_magick"
+
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"

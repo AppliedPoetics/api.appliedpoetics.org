@@ -93,11 +93,17 @@ paths:
                   description: Maximum Levenshtein edit distance (for levenshtein)
                 image:
                   type: string
-                  description: Image data or file path (for color_field)
+                  description: Image URL, data URL, or uploaded image file — PNG, JPEG, GIF, WebP, or BMP (for color_field)
                 mode:
                   type: string
                   enum: [sentences, letters, anagrams, list]
                   description: Processing mode (for color_field)
+                order:
+                  type: integer
+                  description: Markov chain state size in characters (for markov)
+                length:
+                  type: integer
+                  description: Maximum characters to generate (for markov)
                 url:
                   type: string
                   format: uri

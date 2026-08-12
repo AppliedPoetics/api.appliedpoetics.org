@@ -252,8 +252,20 @@ Computational and distance-based text analysis.
 |--------|-------------|------------|
 | `levenshtein` | Finds word pairs within a given edit distance | `text`, `distance` |
 | `color_field` | Analyzes image colors and filters text accordingly | `text`, `image`, `mode` |
+| `markov` | Generates text using character-level Markov chain sampling | `text`, `order`, `length` |
 
 Valid `mode` values for `color_field`: `sentences`, `letters`, `anagrams`, `list`
+
+The `image` parameter for `color_field` accepts:
+
+- An uploaded image file (multipart/form-data)
+- A public HTTP/HTTPS image URL
+- A base64 `data:image/...` URL
+
+Supported image formats are PNG, JPEG, GIF, WebP, and BMP. Files larger than 10 MB are rejected.
+
+- `order` defaults to `2` (size of the character state window).
+- `length` defaults to `50` (maximum characters to generate beyond the initial state).
 
 ---
 
@@ -305,7 +317,7 @@ The API also functions as an MCP (Model Context Protocol) server, enabling AI as
 
 ### Tool Discovery
 
-MCP tools are named `{category}_{method}` (e.g., `pop_weatherizer`, `numerology_birthday`). All 29+ tools are automatically discovered from the service classes.
+MCP tools are named `{category}_{method}` (e.g., `pop_weatherizer`, `numerology_birthday`). All 30+ tools are automatically discovered from the service classes.
 
 ### Tool Invocation
 

@@ -63,8 +63,13 @@ class McpToolRegistry
         },
         "algorithmic_color_field" => {
             text: { type: "string" },
-            image: { type: "string", description: "Image data or file path" },
+            image: { type: "string", description: "Image URL, data URL, or uploaded image file (PNG/JPEG/GIF/WebP/BMP)" },
             mode: { type: "string", enum: [ "sentences", "letters", "anagrams", "list" ], description: "Processing mode" }
+        },
+        "algorithmic_markov" => {
+            text: { type: "string" },
+            order: { type: "integer", description: "Number of characters per state (default 2)" },
+            length: { type: "integer", description: "Maximum number of characters to generate (default 50)" }
         },
         "operation_gutenberg" => {
             url: { type: "string", description: "URL of the Project Gutenberg text file" }
@@ -228,6 +233,8 @@ class McpToolRegistry
             "Finds word pairs within a given edit distance"
         when "ColorField"
             "Analyzes image colors and filters text accordingly"
+        when "Markov"
+            "Generates text using character-level Markov chain sampling"
         when "Sestina"
             "Arranges end-words into a sestina pattern"
         when "Triolet"
