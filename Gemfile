@@ -53,7 +53,7 @@ group :development, :test do
   gem "rswag-specs"
 end
 
-gem "simplecov", "~> 1.0.3", group: :test
+gem "simplecov", "~> 1.1.1", group: :test
 
 # OpenAPI/Swagger documentation serving
 gem "rswag-api"

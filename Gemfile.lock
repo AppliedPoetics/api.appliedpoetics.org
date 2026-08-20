@@ -288,7 +288,7 @@ GEM
       rubocop-rails (>= 2.30)
     ruby-progressbar (1.13.0)
     securerandom (0.4.1)
-    simplecov (1.0.3)
+    simplecov (1.1.1)
     sin_lru_redux (2.5.3)
     sshkit (1.25.0)
       base64
@@ -342,7 +342,7 @@ DEPENDENCIES
   rswag-specs
   rswag-ui
   rubocop-rails-omakase
-  simplecov (~> 1.0.3)
+  simplecov (~> 1.1.1)
   thruster
   tzinfo-data
 
